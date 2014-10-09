@@ -1,41 +1,4 @@
-#theThings.IO node API lib
-This lib allows to connect to the api.theThings.IO endpoint.
-
-Please visit the [documentation page](https://developers.thethings.io) page at [theThings.IO](https://thethings.io)
-
-
-#Install
-```
-#!bash
-npm install thethingsio-api
-
-
-##Getting started
-
-You can put your credentials in a file called config.json with this format:
-
-```
-#!javascript
-
-{
-    "USER_TOKEN" : "your user token",
-    "THING_TOKEN" : "your thing token"
-}
-```
-
-The following code creates a client reading the config from ./config.json and sends 3 requests to the theThings.IO
- coap endpoint. There are 3 possible requests
-
-  * thingReadLatest Reads the last element written to the resource/thing.
-
-  * thingRead Reads all the elements written to the resource in the last 30 days.
-
-  * thingWrite Writes one or more elements to the resource
-
-```
-#!javascript
-```
-var theThingsAPI = require('thethingsio-api');
+var theThingsAPI = require('../');
 
 var KEY = 'distance';
 
@@ -77,4 +40,3 @@ req3.on('response',function(res){
     console.log('Write\n',res.statusCode,res.payload.toString() ,'\n\n');
 });
 req3.end();
-```
