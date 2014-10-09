@@ -8,7 +8,7 @@ Please visit the [documentation page](https://developers.thethings.io) page at [
 ```
 #!bash
 npm install thethingsio-api
-
+```
 
 ##Getting started
 
