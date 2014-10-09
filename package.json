@@ -1,5 +1,5 @@
 {
-    "name": "api.theThings.IO",
+    "name": "thethingsio-api",
     "description": "API library for api.theThings.IO endpoint",
     "version": "0.0.1",
     "private": false,
@@ -10,15 +10,22 @@
             "email": "marti@thethings.io"
         }
     ],
+    "keywords":[
+        "http",
+        "client",
+        "theThings",
+        "theThings.IO",
+        "API REST",
+        "API",
+        "internet of things",
+        "IoT"
+    ],
+    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/theThings/thethingsio-api-node.git"
     },
     "readmeFilename": "README.md",
-    "engines": {
-        "node": "0.10.28",
-        "npm": "1.1.59"
-    },
     "dependencies": {
     }
 }
