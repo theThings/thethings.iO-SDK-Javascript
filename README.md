@@ -22,7 +22,7 @@ You can put your credentials in a file called config.json with this format:
 ```
 
 The following code creates a client reading the config from ./config.json and sends 3 requests to the theThings.IO
- coap endpoint. There are 3 possible requests
+ API REST endpoint. There are 3 possible requests
 
   * thingReadLatest Reads the last element written to the resource/thing.
 
