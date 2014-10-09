@@ -34,7 +34,7 @@ The following code creates a client reading the config from ./config.json and se
 
 ```
 #!javascript
-```
+
 var theThingsAPI = require('thethingsio-api');
 
 var KEY = 'distance';
