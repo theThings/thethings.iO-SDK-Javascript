@@ -6,7 +6,6 @@ Please visit the [documentation page](https://developers.thethings.io) page at [
 
 #Install
 ```
-#!bash
 npm install thethingsio-api
 ```
 
@@ -14,8 +13,7 @@ npm install thethingsio-api
 
 You can put your credentials in a file called config.json with this format:
 
-```
-#!javascript
+```js
 
 {
     "USER_TOKEN" : "your user token",
@@ -32,9 +30,7 @@ The following code creates a client reading the config from ./config.json and se
 
   * thingWrite Writes one or more elements to the resource
 
-```
-#!javascript
-
+```js
 var theThingsAPI = require('thethingsio-api');
 
 var KEY = 'distance';
