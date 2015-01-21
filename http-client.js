@@ -1,16 +1,24 @@
-const HOSTNAME = 'api.thethings.ido'
-    , API_VERSION = 'v1'
+const HOSTNAME = 'api.thethings.io'
+    , API_VERSION = 'v2'
     , http = require('http')
     , events = require('events')
     , util = require('util')
     , PORT = 80
 
 
-var Client = module.exports = function Client(config) {
+var Client = module.exports = function Client(thingToken) {
     if (!(this instanceof Client)) {
         return new Client(config);
     }
-    this.config = config;
+    this.thingToken = thingToken;
+}
+
+function parametersToQuery(parameters){
+    var query = ''
+    for(var param in parameters){
+        query += param+'='+parameters+'&'
+    }
+    return query.substring(0,query.length-1)
 }
 
 function Req(request, object) {
@@ -40,40 +48,25 @@ Client.prototype.thingRead = function (key,parameters) {
     var request = http.request({
         hostname: HOSTNAME,
         port: PORT,
-        path: '/'+API_VERSION + '/ThingRead/' + this.config.THING_TOKEN + '/' + key,
+        path: '/'+API_VERSION + '/things/' + this.thingToken + '/resources' + key + '?' + parametersToQuery(parameters) ,
         headers: {
-            'Accept': 'application/json',
-            'Authorization': 'theThingsIO-Token: ' + this.config.USER_TOKEN
+            'Accept': 'application/json'
         }
     });
     var req = new Req(request);
     return req;
 }
 
-Client.prototype.thingReadLatest = function (key,parameters) {
-//Read the last item stored by the thing
-    var req = http.request({
-        hostname: HOSTNAME,
-        port: PORT,
-        path: '/'+API_VERSION + '/ThingReadLatest/' + this.config.THING_TOKEN + '/' + key,
-        headers: {
-            'Accept': 'application/json',
-            'Authorization': 'theThingsIO-Token: ' + this.config.USER_TOKEN
-        }
-    });
-    return new Req(req);
-}
 
 Client.prototype.thingWrite = function (object,parameters) {
     var request = http.request({
                 hostname: HOSTNAME,
                 port: PORT,
-                path: '/'+API_VERSION + '/ThingWrite',
+                path: '/'+API_VERSION + '/things/'+ this.thingToken +  '?' + parametersToQuery(parameters),
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json',
-                    'Accept': 'application/json',
-                    'Authorization': 'theThingsIO-Token: ' + this.config.USER_TOKEN
+                    'Accept': 'application/json'
                 }
             }
         )
@@ -81,9 +74,24 @@ Client.prototype.thingWrite = function (object,parameters) {
     if (object === null || object === undefined) {
         throw 'Object to write not defined';
     }
-    object.thing = {
-        id: this.config.THING_TOKEN
-    }
+
     var req = new Req(request, object);
+    return req;
+}
+
+Client.prototype.subscribe = function(parameters){
+    var request = http.request({
+                hostname: HOSTNAME,
+                port: PORT,
+                path: '/'+API_VERSION + '/things/'+ this.thingToken +  '?' + parametersToQuery(parameters),
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'Accept': 'application/json'
+                }
+            }
+        )
+        ;
+    var req = new Req(request);
     return req;
 }
