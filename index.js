@@ -24,10 +24,7 @@ function readFile(file) {
     return JSON.parse(data);
 }
 
-module.exports.createClient = function(protocol,file){
-    if(protocol !== 'http' /*&& protocol !== 'coap'*/){
-        protocol = 'http'
-    }
+module.exports.createClient = function(file){
     var config = {};
     if (file === undefined) {
         config = parseConfig(readFile(require('path').dirname(require.main.filename) + '/config.json'));

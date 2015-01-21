@@ -1,4 +1,4 @@
-const HOSTNAME = 'api.thethings.io'
+const HOSTNAME = 'api.thethings.ido'
     , API_VERSION = 'v1'
     , http = require('http')
     , events = require('events')
@@ -23,6 +23,10 @@ function Req(request, object) {
             res.payload = chunk;
             that.emit('response', res);
         })
+    })
+
+    request.on('error',function(error){
+        that.emit('error',error)
     })
 
     this.end = function () {
