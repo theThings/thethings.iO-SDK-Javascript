@@ -29,8 +29,8 @@ var Client = module.exports = function Client(config) {
         })
         activationRequest.end()
     }
-    if (this.activationCode) {
-        process.nextTick(function () {
+    if (this.thingToken) {
+        setImmediate(function () {//maybe a process.nextTick would be better
             that.emit('ready')
         })
     }
