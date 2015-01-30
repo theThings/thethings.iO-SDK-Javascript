@@ -41,7 +41,6 @@ If you provide an activation code your thing will be activated automatically whe
 Please, take a look at the source folder examples/ to see some code examples.
 
 
-Thing read
 ```js
 var theThingsAPI = require('thethingsio-api');
 
