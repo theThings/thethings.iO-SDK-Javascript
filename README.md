@@ -1,5 +1,5 @@
 #theThings.IO node API lib
-This lib allows to connect to the api.theThings.IO endpoint.
+This lib allows to connect to the api.thethings.io endpoint.
 
 Please visit the [documentation page](https://developers.thethings.io) page at [theThings.IO](https://thethings.io)
 
@@ -11,66 +11,48 @@ npm install thethingsio-api
 
 ##Getting started
 
-You can put your credentials in a file called config.json with this format:
+Sign up to [thethings.iO](https://thethings.io) and create a user. Log in and got to the [things manager](https://panel.thethings.io/#/things-manager) and press "get activation codes".
+
+You can put your activation code in a file called config.json with this format:
 
 ```js
 
 {
-    "USER_TOKEN" : "your user token",
-    "THING_TOKEN" : "your thing token"
+    "activationCode" : "one of your activation codes"
 }
 ```
 
-The following code creates a client reading the config from ./config.json and sends 3 requests to the theThings.IO
- API REST endpoint. There are 3 possible requests
+If you already have your thing activated you can just put the thing token
+```js
 
-  * thingReadLatest Reads the last element written to the resource/thing.
+{
+    "thingToken" : "one of your thing tokens"
+}
+```
 
-  * thingRead Reads all the elements written to the resource in the last 30 days.
+With this package you can perform 4 types of actions:
 
-  * thingWrite Writes one or more elements to the resource
+  * thingRead: Reads the last values with a certain key.
+  * thingWrite: Writes one or several values to the things.
+  * thingSubscribe: Subscribes to the realtime channel of the thing.
 
+If you provide an activation code your thing will be activated automatically when you create the client. Then the thing token will be saved to the same config.json.
+
+Please, take a look at the source folder examples/ to see some code examples.
+
+
+Thing read
 ```js
 var theThingsAPI = require('thethingsio-api');
 
-var KEY = 'distance';
-
-//create Client
 var client = theThingsAPI.createClient();
 
-//read latest write
-var req1 = client.thingReadLatest(KEY);
-
-//event fired when the response arrives
-req1.on('response',function(res){
-    console.log('Read Latest\n',res.statusCode, res.payload.toString(),'\n\n');
-});
-req1.end();
-
-//read all writes in the last 30 days
-var req2 = client.thingRead(KEY,{limit:10,startDate:'20141007T080001'});
-req2.on('response',function(res){
-    console.log('Read All\n',res.statusCode,res.payload.toString() ,'\n\n');
-});
-req2.end();
-
-//The object to write.
-var object = {
-    "values":
-        [
-            {
-                "key": KEY,
-                "value": "100",
-                "units": "m",
-                "type": "temporal",
-                "datetime" : "20141007080000"
-            }
-        ]
-}
-//write the object
-var req3 = client.thingWrite(object);
-req3.on('response',function(res){
-    console.log('Write\n',res.statusCode,res.payload.toString() ,'\n\n');
-});
-req3.end();
+var params = {limit:15}
+client.on('ready', function () {
+    client.thingRead('voltage', params, function (error, data) {
+        console.log(error ? error : data)
+    })
+})
 ```
+The previous code reads from the key 'voltage' the last 15 values. In the params object you can also add startDate and endDate in YYYYMMDDTHHmmss format. Note that the 'ready' event is fired when the activation is completed. If the thing is already activated the event will we fired after createClient()
+

@@ -48,14 +48,47 @@ function Req(request, object, callback) {
     if (callback === undefined) {
         callback = object
     }
+    var that = this
     events.EventEmitter.call(this)
     this.request = request
-    var that = this
     this.object = object
+    this.timeout = null
+    
+    this._restartTimeout = function(time){
+        if(that.timeout){
+          clearTimeout(this.timeout)
+        }
+        that.timeout = setTimeout(function(){
+          that.emit('disconected')
+        }, time+1000)
+        return that.timeout
+    }
+    
+    if(request.keepAlive){
+      that._restartTimeout(request.keepAlive)    
+    }
     request.on('response', function (res) {
         res.on('data', function (chunk) {
-            chunk = JSON.parse(chunk)
-            if (chunk === '{}') console.log('keepalive')
+            if(request.keepAlive){
+              that._restartTimeout(request.keepAlive)
+              if (chunk.toString() === '{}'){
+                that.emit('keepAlive')
+                return
+              }
+              chunk = JSON.parse(chunk)
+              if(chunk.status === 'success' && chunk.message === 'subscribed'){
+                that.emit('subscribed')
+                return
+              }else if(chunk.status === 'error'){
+                if (callback !== undefined) {
+                   return callback(chunk.message)
+                }else{
+                  that.emit('error', chunk.message)
+                }
+              }
+            }else{
+              chunk = JSON.parse(chunk)
+            }
             that.emit('data', chunk)
             if (callback !== undefined) {
                 callback(null, chunk)
@@ -77,7 +110,11 @@ function Req(request, object, callback) {
     if (callback !== undefined) {
         this.end()
     }
+    
+
 }
+
+
 
 util.inherits(Req, events.EventEmitter)
 util.inherits(Client, events.EventEmitter)
@@ -164,6 +201,7 @@ Client.prototype.thingSubscribe = function (parameters, callback) {
             }
         }
     )
+    request.keepAlive = parameters.keepAlive
 
     var req = new Req(request, callback)
     return req

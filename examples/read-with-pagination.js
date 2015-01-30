@@ -13,7 +13,6 @@ function read(endDate){
         console.log(error ? error : data)
         if(data.length > 0){
             read(data[data.length-1].datetime.split('.')[0].replace(/-/g, '').replace(/:/g, '').replace('T',''))
-           // read()
         }
     })
 }
