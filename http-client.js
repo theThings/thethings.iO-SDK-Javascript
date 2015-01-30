@@ -45,7 +45,7 @@ function parametersToQuery(parameters) {
 }
 
 function Req(request, object, callback) {
-    if (callback === undefined) {
+    if (callback === undefined && typeof object === 'function') {
         callback = object
     }
     var that = this
