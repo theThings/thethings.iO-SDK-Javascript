@@ -11,7 +11,7 @@ npm install thethingsio-api
 
 ##Getting started
 
-Sign up to [thethings.iO](https://thethings.io) and create a user. Log in and got to the [things manager](https://panel.thethings.io/#/things-manager) and press "get activation codes".
+Sign up to [thethings.iO](https://thethings.io) and create a user. Log in and go to the [things manager](https://panel.thethings.io/#/things-manager) and press "get activation codes".
 
 You can put your activation code in a file called config.json with this format:
 
