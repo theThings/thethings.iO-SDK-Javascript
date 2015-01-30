@@ -53,41 +53,41 @@ function Req(request, object, callback) {
     this.request = request
     this.object = object
     this.timeout = null
-    
-    this._restartTimeout = function(time){
-        if(that.timeout){
-          clearTimeout(this.timeout)
+
+    this._restartTimeout = function (time) {
+        if (that.timeout) {
+            clearTimeout(this.timeout)
         }
-        that.timeout = setTimeout(function(){
-          that.emit('disconected')
-        }, time+1000)
+        that.timeout = setTimeout(function () {
+            that.emit('disconected')
+        }, time + 1000)
         return that.timeout
     }
-    
-    if(request.keepAlive){
-      that._restartTimeout(request.keepAlive)    
+
+    if (request.keepAlive) {
+        that._restartTimeout(request.keepAlive)
     }
     request.on('response', function (res) {
         res.on('data', function (chunk) {
-            if(request.keepAlive){
-              that._restartTimeout(request.keepAlive)
-              if (chunk.toString() === '{}'){
-                that.emit('keepAlive')
-                return
-              }
-              chunk = JSON.parse(chunk)
-              if(chunk.status === 'success' && chunk.message === 'subscribed'){
-                that.emit('subscribed')
-                return
-              }else if(chunk.status === 'error'){
-                if (callback !== undefined) {
-                   return callback(chunk.message)
-                }else{
-                  that.emit('error', chunk.message)
+            if (request.keepAlive) {
+                that._restartTimeout(request.keepAlive)
+                if (chunk.toString() === '{}') {
+                    that.emit('keepAlive')
+                    return
                 }
-              }
-            }else{
-              chunk = JSON.parse(chunk)
+                chunk = JSON.parse(chunk)
+                if (chunk.status === 'success' && chunk.message === 'subscribed') {
+                    that.emit('subscribed')
+                    return
+                } else if (chunk.status === 'error') {
+                    if (callback !== undefined) {
+                        return callback(chunk.message)
+                    } else {
+                        that.emit('error', chunk.message)
+                    }
+                }
+            } else {
+                chunk = JSON.parse(chunk)
             }
             that.emit('data', chunk)
             if (callback !== undefined) {
@@ -110,10 +110,9 @@ function Req(request, object, callback) {
     if (callback !== undefined) {
         this.end()
     }
-    
+
 
 }
-
 
 
 util.inherits(Req, events.EventEmitter)

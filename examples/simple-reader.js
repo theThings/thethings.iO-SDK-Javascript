@@ -4,7 +4,7 @@ var theThingsAPI = require('../')
 var client = theThingsAPI.createClient()
 
 client.on('ready', function () {
-    client.thingRead('voltage',{limit:15}, function (error, data) {
+    client.thingRead('voltage', {limit: 15}, function (error, data) {
         console.log(error ? error : data)
     })
 })

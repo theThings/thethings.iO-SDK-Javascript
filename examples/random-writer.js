@@ -13,13 +13,13 @@ var object = {
     ]
 }
 
-client.on('ready',function(){
+client.on('ready', function () {
 //write the object
-setInterval(function () {
-    object.values[0].value = Math.floor(Math.random() * 100)
-    client.thingWrite(object, function (error, data) {
-        console.log(error ? error : data)
-    })
-    console.log("send", object)
-}, 1000)
+    setInterval(function () {
+        object.values[0].value = Math.floor(Math.random() * 100)
+        client.thingWrite(object, function (error, data) {
+            console.log(error ? error : data)
+        })
+        console.log("send", object)
+    }, 1000)
 })
