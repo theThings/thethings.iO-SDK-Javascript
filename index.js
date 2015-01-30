@@ -1,22 +1,19 @@
-var config = null;
+var config = null
+    , fs = require('fs');
+
 
 function parseConfig(conf) {
-    var config = {};
-    if (conf.hasOwnProperty('USER_TOKEN')) {
-        config.USER_TOKEN = conf.USER_TOKEN;
-    } else {
-        throw 'USER_TOKEN not defined';
+    var config = conf;
+    if (typeof conf !== 'object') {
+        throw 'Invalid config file format'
     }
-    if (conf.hasOwnProperty('THING_TOKEN')) {
-        config.THING_TOKEN = conf.THING_TOKEN;
-    } else {
-        throw 'THING_TOKEN not defined';
+    if (!conf.thingToken && !conf.activationCode) {
+        throw 'The config file has not thingToken nor activationCode'
     }
     return config;
 }
 
 function readFile(file) {
-    var fs = require('fs');
     var data = fs.readFileSync(file, 'utf8')
     if (data === undefined) {
         throw 'Error: file ' + file + ' not found.';
@@ -24,16 +21,33 @@ function readFile(file) {
     return JSON.parse(data);
 }
 
-module.exports.createClient = function(file){
-    var config = {};
-    if (file === undefined) {
-        config = parseConfig(readFile(require('path').dirname(require.main.filename) + '/config.json'));
-    } else if (typeof file === 'string') {
-        config = parseConfig(readFile(file));
-    } else {
-        config = parseConfig(file);
-    }
+function writeFile(file, data) {
+    fs.writeFile(file, JSON.stringify(data), function (err) {
+        if (err) {
+            throw ('Error saving config')
+        }
+    });
+}
 
+module.exports.createClient = function (file) {
+    var config = {};
+    var filename = null
+    if (file === undefined) {
+        filename = require('path').dirname(require.main.filename) + '/config.json'
+        config = parseConfig(readFile(filename))
+    } else if (typeof file === 'string') {
+        filename = file
+        config = parseConfig(readFile(file))
+    } else {
+        config = parseConfig(file)
+    }
     var cli = /*protocol === 'http' ?*/ require('./http-client')(config) /*: require('./coap-client')(config)*/;
+    cli.on('activated', function (data) {
+        if (filename) {
+            var newData = config
+            newData.thingToken = data.thingToken
+            writeFile(filename, newData)
+        }
+    })
     return cli;
 }

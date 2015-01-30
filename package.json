@@ -1,7 +1,7 @@
 {
     "name": "thethingsio-api",
     "description": "API library for api.theThings.IO endpoint",
-    "version": "0.0.3",
+    "version": "0.1.0",
     "private": false,
     "author": "TheThingsIO <hello@thethings.io>",
     "contributors": [
