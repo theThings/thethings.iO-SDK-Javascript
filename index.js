@@ -29,7 +29,7 @@ function writeFile(file, data) {
     });
 }
 
-module.exports.createClient = function (file) {
+function createClient(file,secure){
     var config = {};
     var filename = null
     if (file === undefined) {
@@ -41,7 +41,7 @@ module.exports.createClient = function (file) {
     } else {
         config = parseConfig(file)
     }
-    var cli = /*protocol === 'http' ?*/ require('./http-client')(config) /*: require('./coap-client')(config)*/;
+    var cli = /*protocol === 'http' ?*/ require('./http-client')(config, secure) /*: require('./coap-client')(config)*/;
     cli.on('activated', function (data) {
         if (filename) {
             var newData = config
@@ -51,3 +51,13 @@ module.exports.createClient = function (file) {
     })
     return cli;
 }
+
+module.exports.createSecureClient = function(file){
+  return createClient(file, true)
+}
+
+module.exports.createClient = function (file) {
+  return createClient(file,false)
+}
+
+

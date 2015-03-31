@@ -1,15 +1,15 @@
 const HOSTNAME = 'api.thethings.io'
     , API_VERSION = 'v2'
-    , http = require('http')
     , events = require('events')
     , util = require('util')
-    , PORT = 80
+var http = null
 
 
-var Client = module.exports = function Client(config) {
+var Client = module.exports = function Client(config,secure) {
     if (!(this instanceof Client)) {
-        return new Client(config)
+        return new Client(config,secure)
     }
+    http = secure ? require('https') : require('http')
     events.EventEmitter.call(this)
     this.thingToken = config.thingToken
     this.activationCode = config.activationCode
@@ -121,7 +121,6 @@ util.inherits(Client, events.EventEmitter)
 Client.prototype.activateThing = function (activatonCode, callback) {
     var request = http.request({
         hostname: HOSTNAME,
-        port: PORT,
         path: '/' + API_VERSION + '/things',
         method: 'POST',
         headers: {
@@ -142,7 +141,6 @@ Client.prototype.thingRead = function (key, parameters, callback) {
     }
     var request = http.request({
         hostname: HOSTNAME,
-        port: PORT,
         path: '/' + API_VERSION + '/things/' + this.thingToken + '/resources/' + key + '?' + parametersToQuery(parameters),
         headers: {
             'Accept': 'application/json'
@@ -162,7 +160,6 @@ Client.prototype.thingWrite = function (object, parameters, callback) {
     }
     var request = http.request({
             hostname: HOSTNAME,
-            port: PORT,
             path: '/' + API_VERSION + '/things/' + this.thingToken + '?' + parametersToQuery(parameters),
             method: 'POST',
             headers: {
@@ -192,7 +189,6 @@ Client.prototype.thingSubscribe = function (parameters, callback) {
     }
     var request = http.request({
             hostname: HOSTNAME,
-            port: PORT,
             path: '/' + API_VERSION + '/things/' + this.thingToken + '?' + parametersToQuery(parameters),
             headers: {
                 'Content-Type': 'application/json',
