@@ -44,7 +44,10 @@ Please, take a look at the source folder examples/ to see some code examples.
 ```js
 var theThingsAPI = require('thethingsio-api');
 
-var client = theThingsAPI.createClient();
+//http client
+//var client = theThingsAPI.createClient();
+//https client
+var client = theThingsAPI.createSecureClient();
 
 var params = {limit:15}
 client.on('ready', function () {
