@@ -1,4 +1,4 @@
-const HOSTNAME = 'api.thethings.io'
+const HOSTNAME = 'api.devices.thethings.io'
     , API_VERSION = 'v2'
     , events = require('events')
     , util = require('util')
